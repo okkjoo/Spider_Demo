@@ -20,8 +20,8 @@ def main():
     # 爬取网页
     dataList = get_data(baseUrl)
     # 保存数据
-    savePath = '.\\doubanTop250.xls'
-    save_data(savePath)
+    savePath = 'doubanTop250.xls'
+    save_data(dataList, savePath)
 
 
 # 爬取网页
@@ -96,9 +96,21 @@ def ask_url(url):
 
 
 #保存数据
-def save_data(savePath):
+def save_data(dataList, savePath):
+    book = xlwt.Workbook(encoding="utf-8", style_compression=0)  #创 kook对亲
+    sheet = book.add_sheet("doubanTop250", cell_overwrite_ok=True)  #创建工作表
+    col = ("电影详情链接", "图片链接", "影片名称", "影片别名", "评分", "评价数", "概况", "相关信息")
+    for i in range(0, 8):
+        sheet.write(0, i, col[i])
+
+    for i in range(0, 250):
+        data = dataList[i]
+        for j in range(0, 8):
+            sheet.write(i + 1, j, data[j])
+    book.save(savePath)
     return
 
 
 if __name__ == '__main__':
     main()
+    print("爬取完毕")
