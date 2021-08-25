@@ -3,5 +3,14 @@
 	"python.testing.promptToConfigure": false,
 	"python.testing.pytestEnabled": false,
 	"python.testing.unittestEnabled": false,
-	"python.testing.nosetestsEnabled": false
+	"python.testing.nosetestsEnabled": false,
+	"sqltools.connections": [
+		{
+			"previewLimit": 500,
+			"driver": "SQLite",
+			"database": "${workspaceFolder:spider}/movie.db",
+			"name": "movie250"
+		}
+	],
+	"sqltools.useNodeRuntime": true
 }

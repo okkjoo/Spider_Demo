@@ -20,8 +20,10 @@ def main():
     # 爬取网页
     dataList = get_data(baseUrl)
     # 保存数据
-    savePath = 'doubanTop250.xls'
-    save_data(dataList, savePath)
+    # savePath = 'doubanTop250.xls'
+    # save_data(dataList, savePath)
+    dbPath = "doubanTop250.db"
+    save_date2db(dataList, dbPath)
 
 
 # 爬取网页
@@ -109,6 +111,51 @@ def save_data(dataList, savePath):
             sheet.write(i + 1, j, data[j])
     book.save(savePath)
     return
+
+
+def save_date2db(dataList, dbPath):
+    init_db(dbPath)
+    conn = sqlite3.connect(dbPath)
+    cur = conn.cursor()
+
+    for data in dataList:
+        for index in range(len(data)):
+            if index == 4 or index == 5:
+                continue
+            data[index] = '"' + data[index] + '"'
+        sql = '''
+            insert into movie250(
+                info_link,pic_link,name,another_name,score,rated,introduction,info
+            )
+            values(%s)
+        ''' % ",".join(data)
+        cur.execute(sql)
+        conn.commit()
+    cur.close()
+    conn.close()
+    return
+
+
+def init_db(dpPath):
+    sql = '''
+        create table movie250 
+        (
+        id integer primary key autoincrement,
+        info_link text ,
+        pic_link text,
+        name varchar,
+        another_name varchar,
+        score numeric,
+        rated numeric,
+        introduction text,
+        info text
+        )
+    '''
+    conn = sqlite3.connect(dpPath)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    conn.close()
 
 
 if __name__ == '__main__':
