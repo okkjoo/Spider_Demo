@@ -39,7 +39,20 @@ def movie():
 
 @app.route('/score')
 def score():
-    return render_template("score.html")
+    scores = []  # 评分
+    num_score = []  # 每个评分的电影数量
+    conn = connect_db()
+    cur = conn.cursor()
+    sql = "select score,count(score) from movie250 group by score"
+    data = cur.execute(sql)
+    for item in data:
+        scores.append(str(item[0]))
+        num_score.append(str(item[1]))
+    # a = ','.join(scores)
+    # b = ','.join(num_score)
+    cur.close()
+    conn.close()
+    return render_template("score.html", scores=scores, num_score=num_score)
 
 
 @app.route('/word')
